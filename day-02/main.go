@@ -9,7 +9,36 @@ import (
 )
 
 func main() {
+	part1()
+	part2()
+}
+
+func part1() {
 	safeReports := 0
+
+	for _, report := range makeReports() {
+		if safe(report) {
+			safeReports++
+		}
+	}
+
+	fmt.Printf("Part 1: %v\n", safeReports)
+}
+
+func part2() {
+	safeReports := 0
+
+	for _, report := range makeReports() {
+		if safe(report) || canBeSafe(report) {
+			safeReports++
+		}
+	}
+
+	fmt.Printf("Part 2: %v\n", safeReports)
+}
+
+func makeReports() [][]int {
+	reports := make([][]int, 0)
 
 	bytes, _ := os.ReadFile("input.txt")
 
@@ -21,12 +50,10 @@ func main() {
 			report = append(report, n)
 		}
 
-		if safe(report) {
-			safeReports++
-		}
+		reports = append(reports, report)
 	}
 
-	fmt.Printf("Part 1: %v\n", safeReports)
+	return reports
 }
 
 func safe(ns []int) bool {
@@ -49,4 +76,26 @@ func safe(ns []int) bool {
 	}
 
 	return inc || dec
+}
+
+func canBeSafe(ns []int) bool {
+	if safe(ns) {
+		return true
+	}
+
+	for i := range ns {
+		if safe(removeElement(ns, i)) {
+			return true
+		}
+	}
+
+	return false
+}
+
+func removeElement(ns []int, index int) []int {
+	new := make([]int, len(ns)-1)
+	copy(new[:index], ns[:index])
+	copy(new[index:], ns[index+1:])
+
+	return new
 }
