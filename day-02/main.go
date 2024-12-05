@@ -29,7 +29,7 @@ func part2() {
 	safeReports := 0
 
 	for _, report := range makeReports() {
-		if safe(report) || canBeSafe(report) {
+		if canBeSafe(report) {
 			safeReports++
 		}
 	}
